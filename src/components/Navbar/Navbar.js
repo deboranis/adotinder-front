@@ -1,40 +1,44 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import themeColors from '../../assets/theme';
+import { AppBar, Toolbar, Button, IconButton, Link } from "@material-ui/core";
+import { themeColors } from '../../assets/theme';
 import adotinder_logo from '../../assets/adotinder_logo.png';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
   },
+  logo: {
+    maxHeight: 50,
+  },
+  appbar: {
+    backgroundColor: themeColors.white,
+    color: themeColors.orange,
+  }
 }));
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  const history = useHistory();
+  function handleClick() {
+    history.push('/login');
+  }
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.appbar}>
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="white" aria-label="menu">
-            <img alt="logo do adotinder" src={adotinder_logo} />
+          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+            <Link href="/">
+            <img className={classes.logo} alt="logo do adotinder" src={adotinder_logo} />
+            </Link>
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            News
-          </Typography>
-          <Button color="inherit">Login</Button>
+          <Button onClick={handleClick} color="inherit">Login</Button>
+          <Button color="inherit">Sobre</Button>
         </Toolbar>
       </AppBar>
     </div>
