@@ -1,15 +1,20 @@
 import axios from 'axios';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { Container, TextField, Button, Typography } from '@material-ui/core';
+import { Container, TextField, Button, Typography, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Context } from '../context/Context';
+import { Context } from '../../context/Context';
 
-export default function SignupForm({ classes }) {
+export default function SignUpForm({ classes }) {
 	const { state, dispatch } = useContext(Context);
 	const [user, setUser] = useState();
+	const [tipo, setTipo] = useState();
   const history = useHistory();
+
+  const handleType = (event) => {
+    setTipo(event.target.value);
+  };
 
 	const signupSchema = yup.object({
     email: yup
@@ -50,15 +55,14 @@ export default function SignupForm({ classes }) {
       .max(11, 'Apenas números'),
     tipo: yup
       .string()
-      .isValid('protetor')
-      .isValid('adotante')
+      .oneOf(['adotante', 'protetor'])
       .required(),
     nomeOng: yup
       .string(),
     cnpj: yup
       .string()
       .matches(/[0-9]/, 'Apenas números')
-      .min(16, 'Apenas números')
+      .min(14, 'Digite todos os números do CNPJ')
   });
 
 	useEffect(() => {
@@ -74,13 +78,20 @@ export default function SignupForm({ classes }) {
     initialValues: {
       email: '',
       senha: '',
-      confirmarSenha: ''
+      confirmarSenha: '',
+      nome: '',
+      cpf: '',
+      telefone: '',
+      tipo: '',
+      nomeOng: '',
+      cnpj: '',
     },
     validationSchema: signupSchema,
     onSubmit: async (values, helpers) => {
       try {
-        const mapped = { email: values.email, senha: values.senha }
-        const user = await axios.post(`${process.env.REACT_APP_SIGNUP}/auth/signup`, values, {
+        console.log(values)
+        delete values.confirmarSenha;
+        const user = await axios.post(process.env.REACT_APP_SIGNUP, values, {
           withCredentials: true
         });
         setUser(user.data);
@@ -175,7 +186,48 @@ export default function SignupForm({ classes }) {
               value={formik.values.telefone}
               onChange={formik.handleChange}
             />
-            {/* COLOCAR O RADIAL, CNPJ E NOME DA ONG */}
+            <Select
+              required
+              autoWidth
+              variant="standard"
+              name="tipo"
+              id="tipo"
+              label="tipo"
+              defaultValue=''
+              value={formik.values.tipo}
+              onChange={(event) => {handleType(event); formik.handleChange(event)}}
+              >
+                <MenuItem value={'protetor'}>Protetor</MenuItem>
+                <MenuItem value={'adotante'}>Adotante</MenuItem>
+             </Select>
+            {tipo === 'protetor' ? 
+                <>
+                  <TextField
+                    required
+                    fullWidth
+                    variant="standard"
+                    label="Nome da ONG"
+                    name="nomeOng"
+                    id="nomeOng"
+                    error={formik.touched.nomeOng && Boolean(formik.errors.nomeOng)}
+                    helperText={formik.touched.nomeOng && formik.errors.nomeOng}
+                    value={formik.values.nomeOng}
+                    onChange={formik.handleChange}
+                    />
+                  <TextField
+                    required
+                    fullWidth
+                    variant="standard"
+                    label="CNPJ da ONG"
+                    name="cnpj"
+                    id="cnpj"
+                    error={formik.touched.cnpj && Boolean(formik.errors.cnpj)}
+                    helperText={formik.touched.cnpj && formik.errors.cnpj}
+                    value={formik.values.cnpj}
+                    onChange={formik.handleChange}
+                  />
+                </>
+          : null}
             <Button
               variant="contained"
               color="primary"

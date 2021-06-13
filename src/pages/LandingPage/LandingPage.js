@@ -72,8 +72,8 @@ export default function LandingPage() {
 				</Typography>
 			</Box>
 			<Box className={classes.btn_container}>
-				<Button href="/" variant="contained" className={classes.btn}>Cadastre-se</Button>
-				<Button href="/" variant="contained" className={classes.btn}>Login</Button>
+				<Button href="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
+				<Button href="/login" variant="contained" className={classes.btn}>Login</Button>
 			</Box>
     </Container>
 		</>
