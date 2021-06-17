@@ -2,16 +2,16 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
 import { Container, TextField, Button, Typography } from '@material-ui/core';
-import { useEffect, useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../context/Context';
+import { set } from '../../utils/localStorage';
 
 export default function FormLogin({ classes }) {
 	const { dispatch } = useContext(Context);
-	const [user, setUser] = useState(null);
   const history = useHistory();
 
-	const signupSchema = yup.object({
+	const loginSchema = yup.object({
     email: yup
       .string()
       .trim()
@@ -22,16 +22,6 @@ export default function FormLogin({ classes }) {
       .required('Campo obrigatório'),
   });
   // validando os inputs do form de login com yup
-
-	useEffect(() => {
-    if (user) {
-      dispatch({
-        type: 'PROVIDE_USER',
-        payload: user
-      });
-    }
-  }, [user]);
-  // se tiver um usuário, vai mandar o usuário pro state do contexto
 	
   const formik = useFormik({
     initialValues: {
@@ -39,13 +29,17 @@ export default function FormLogin({ classes }) {
       senha: '',
     },
     // inicializando o objeto com email e senha
-    validationSchema: signupSchema,
+    validationSchema: loginSchema,
     onSubmit: async (values, helpers) => {
       try {
         const user = await axios.post(process.env.REACT_APP_LOGIN, values, {
           withCredentials: true
         });
-        setUser(user.data);
+        dispatch({
+          type: 'PROVIDE_USER',
+          payload: user.data,
+        });
+        set('authed', { success: true })
         history.push('/dashboard');
       } catch (error) {
         if (error.response.data?.type === 'User-Invalid-Credentials') {

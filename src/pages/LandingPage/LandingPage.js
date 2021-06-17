@@ -1,9 +1,8 @@
 import { Box, Button, Container, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { themeColors } from "../../assets/theme";
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Context } from '../../context/Context';
-import axios from 'axios';
 import Navbar from '../../components/Navbar/Navbar';
 import quadro1 from '../../assets/images/quadro1.jpg';
 import quadro2 from '../../assets/images/quadro2.jpg';
@@ -41,18 +40,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function LandingPage() {
-	const { state, dispatch } = useContext(Context);
-	console.log(process.env.REACT_APP_GET_TOKEN)
-	useEffect(() => {
-		axios.get(process.env.REACT_APP_GET_TOKEN, { withCredentials: true }) // dizendo pro axios mandar cookies
-			.then((data) => {
-				dispatch({
-					type: "PROVIDE_USER",
-					payload: data.data,
-				})
-				console.log(data)
-			}); 
-	}, [])
+	const { state } = useContext(Context);
 	const classes = useStyles();
 
   return(
@@ -71,10 +59,10 @@ export default function LandingPage() {
 					O Adotinder oferece um algoritmo de combinação que mostra os melhores pets para o seu estilo de vida em aproximadamente um minuto! Quer testar?
 				</Typography>
 			</Box>
-			<Box className={classes.btn_container}>
+			{state.user.email ? <Box className={classes.btn_container}>
 				<Button href="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
 				<Button href="/login" variant="contained" className={classes.btn}>Login</Button>
-			</Box>
+			</Box> : null}
     </Container>
 		</>
   )

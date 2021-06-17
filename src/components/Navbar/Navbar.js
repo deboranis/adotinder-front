@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link as ReactLink } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Button, IconButton, Link } from "@material-ui/core";
@@ -33,7 +34,7 @@ export default function ButtonAppBar() {
       <AppBar position="static" className={classes.appbar}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} aria-label="menu">
-            <Link href="/">
+            <Link component={ReactLink} to="/">
             <img className={classes.logo} alt="logo do adotinder" src={adotinder_logo} />
             </Link>
           </IconButton>
