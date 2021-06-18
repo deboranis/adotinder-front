@@ -1,13 +1,16 @@
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import { useEffect, useContext } from 'react';
 import { Context } from '../context/Context';
-import { set } from '../utils/localStorage';
+import { get, set } from '../utils/localStorage';
 
 export default function useToken() {
   const { state, dispatch } = useContext(Context);
+  const history = useHistory();
 
   useEffect(() => {
-    if (!state.user.email) {
+    console.log(get('authed'));
+    if (!state.user.email && !get('authed')) {
       axios.get(process.env.REACT_APP_GET_TOKEN, { withCredentials: true }) // dizendo pro axios mandar cookies
 			.then((data) => {
 				dispatch({
@@ -15,7 +18,7 @@ export default function useToken() {
 					payload: data.data,
 				});
         set('authed', { success: true });
-			}).catch(() => set('authed', { success: false }));
+			});
     }
   }, []);
 }

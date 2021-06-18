@@ -9,7 +9,7 @@ export default function Dashboard() {
   const history = useHistory();
   const { state } = useContext(Context);
 
-  useEffect(() => get('authed') || state.user.email ? null : history.push('/login'));
+  useEffect(() => get('authed') || state.user.email ? null : history.push('/login'), []);
   // estamos partindo do princípio que pode acontecer de não ter nada no local storage, então consultamos o state tbm
 
   return(

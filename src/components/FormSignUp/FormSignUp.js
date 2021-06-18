@@ -101,7 +101,7 @@ export default function SignUpForm({ classes }) {
           helpers.setFieldError('email', 'Já existe um usuário com esse email');
         }
         if (error.response.data?.type === 'User-Exists') {
-          helpers.setFieldError('nickname', 'Essa conta já existe');
+          helpers.setFieldError('cpf', 'Essa conta já existe');
           helpers.setFieldError('email', 'Essa conta já existe');
         }
       }

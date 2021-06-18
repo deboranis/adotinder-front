@@ -6,6 +6,7 @@ import { Context } from '../../context/Context';
 import Navbar from '../../components/Navbar/Navbar';
 import quadro1 from '../../assets/images/quadro1.jpg';
 import quadro2 from '../../assets/images/quadro2.jpg';
+import { get } from "../../utils/localStorage";
 
 const useStyles = makeStyles(() => ({
 	container1: {
@@ -59,7 +60,7 @@ export default function LandingPage() {
 					O Adotinder oferece um algoritmo de combinação que mostra os melhores pets para o seu estilo de vida em aproximadamente um minuto! Quer testar?
 				</Typography>
 			</Box>
-			{state.user.email ? <Box className={classes.btn_container}>
+			{!state.user.email && !get('authed') ? <Box className={classes.btn_container}>
 				<Button href="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
 				<Button href="/login" variant="contained" className={classes.btn}>Login</Button>
 			</Box> : null}
