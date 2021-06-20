@@ -9,8 +9,6 @@ export default function Login() {
   const { state } = useContext(Context);
   const history = useHistory();
 
-  useEffect(() => state.user.email || get('authed') ? history.push('/dashboard') : null, []);
-
   return(
     <>
       <Navbar />

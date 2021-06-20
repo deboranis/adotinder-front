@@ -1,13 +1,15 @@
-import { useFormik } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
+import { useFormik } from 'formik';
 import { Container, TextField, Button, Typography } from '@material-ui/core';
 import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../context/Context';
 import { set } from '../../utils/localStorage';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { themeColors, baseFont } from "../../assets/theme";
 
-export default function FormLogin({ classes }) {
+export default function FormLogin() {
 	const { dispatch } = useContext(Context);
   const history = useHistory();
 
@@ -39,10 +41,14 @@ export default function FormLogin({ classes }) {
           type: 'PROVIDE_USER',
           payload: user.data,
         });
-        set('authed', { success: true })
-        history.push('/dashboard');
+        if (user.data.email) {
+          set('authed', { success: true });
+          history.push('/dashboard', user.data);
+          return;
+        }
+        throw new Error('Login failed');
       } catch (error) {
-        if (error.response.data?.type === 'User-Invalid-Credentials') {
+        if (error.response.data?.type === 'No-Credentials') {
           // esse operador pergunta se existe dentro do objeto 'data' que vem no response um campo chamado 'type' e, se houver, se o valor dele é 'User-Invalid-Credentials'
           helpers.setFieldError('email', 'Usuário ou senha incorretos');
           helpers.setFieldError('senha', 'Usuário ou senha incorretos');
@@ -51,13 +57,30 @@ export default function FormLogin({ classes }) {
     }
   });
 
+  const useStyles = makeStyles(() => ({
+    btnLogin: {
+      fontWeight: 700,
+      marginTop: 20,
+      fontSize: "1.2em",
+    },
+    formText: {
+      color: "grey",
+      marginTop: 20
+    }
+  }));
+
+  const classes = useStyles();
+  
 	return (
-		<Container maxWidth="xs">
-      <Typography variant="h5">Acessar</Typography>
-        <form onSubmit={formik.handleSubmit}>
+    <ThemeProvider theme={themeColors}>
+    <ThemeProvider theme={baseFont}>
+		  <Container maxWidth="xs">
+        <Typography variant="h5" className={classes.formText}>Acessar</Typography>
+          <form onSubmit={formik.handleSubmit}>
             <TextField
               required
               fullWidth
+              className={classes.formText}
               variant="standard"
               label="E-Mail"
               name="email"
@@ -66,10 +89,11 @@ export default function FormLogin({ classes }) {
               helperText={formik.touched.email && formik.errors.email}
               value={formik.values.email}
               onChange={formik.handleChange}
-            />
+              />
             <TextField
               required
               fullWidth
+              className={classes.formText}
               type="password"
               variant="standard"
               label="Senha"
@@ -79,15 +103,18 @@ export default function FormLogin({ classes }) {
               helperText={formik.touched.senha && formik.errors.senha}
               value={formik.values.senha}
               onChange={formik.handleChange}
-            />
+              />
             <Button
               variant="contained"
-              color="primary"
+              className={classes.btnLogin}
+              color="secondary"
               type="submit"
-            >
+              >
               Entrar
             </Button>
-            </form>
+          </form>
     </Container>
+  </ThemeProvider>
+  </ThemeProvider>
 	)
 };

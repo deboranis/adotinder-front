@@ -3,10 +3,12 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { Container, TextField, Button, Typography, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState, useContext } from 'react';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../context/Context';
+import { themeColors, baseFont } from '../../assets/theme';
 
-export default function SignUpForm({ classes }) {
+export default function SignUpForm() {
 	const { state, dispatch } = useContext(Context);
 	const [user, setUser] = useState();
 	const [tipo, setTipo] = useState();
@@ -89,7 +91,10 @@ export default function SignUpForm({ classes }) {
     validationSchema: signupSchema,
     onSubmit: async (values, helpers) => {
       try {
-        console.log(values)
+        if (values.tipo === 'adotante') {
+          delete values.nomeOng;
+          delete values.cnpj
+        }
         delete values.confirmarSenha;
         const user = await axios.post(process.env.REACT_APP_SIGNUP, values, {
           withCredentials: true
@@ -108,13 +113,39 @@ export default function SignUpForm({ classes }) {
     }
   });
 
+  const useStyles = makeStyles(() => ({
+    formText: {
+      color: "grey",
+      fontFamily: baseFont.typography.fontFamily,
+      marginTop: 20,
+    },
+    formInput: {
+      marginTop: 10,
+    },
+    btnSignup: {
+      marginTop: 20,
+      fontWeight: 700,
+      fontSize: "1.2em",
+      fontFamily: baseFont.typography.fontFamily,
+      margin: 20
+    },
+    container: {
+      display: "flex",
+      flexDirection: "column"
+    },
+  }))
+
+  const classes = useStyles();
+
 	return (
-		<Container maxWidth="xs">
-      <Typography variant="h5">Cadastre-se</Typography>
-            <form onSubmit={formik.handleSubmit}>
+    <ThemeProvider theme={baseFont}>
+		  <Container maxWidth="xs">
+        <Typography variant="h5" className={classes.formText}>Cadastre-se</Typography>
+          <form className={classes.container} onSubmit={formik.handleSubmit}>
             <TextField
               required
               fullWidth
+              className={classes.formInput}
               variant="standard"
               label="Nome completo"
               name="nome"
@@ -127,6 +158,7 @@ export default function SignUpForm({ classes }) {
             <TextField
               required
               fullWidth
+              className={classes.formInput}
               variant="standard"
               label="E-Mail"
               name="email"
@@ -139,6 +171,7 @@ export default function SignUpForm({ classes }) {
             <TextField
               required
               fullWidth
+              className={classes.formInput}
               type="password"
               variant="standard"
               label="Senha"
@@ -152,6 +185,7 @@ export default function SignUpForm({ classes }) {
             <TextField
               required
               fullWidth
+              className={classes.formInput}
               type="password"
               variant="standard"
               label="Confirme sua senha"
@@ -165,6 +199,7 @@ export default function SignUpForm({ classes }) {
             <TextField 
               required
               fullWidth
+              className={classes.formInput}
               variant="standard"
               label="Insira seu CPF"
               name="cpf"
@@ -177,6 +212,7 @@ export default function SignUpForm({ classes }) {
             <TextField
               required
               fullWidth
+              className={classes.formInput}
               variant="standard"
               label="Telefone com DDD"
               name="telefone"
@@ -189,6 +225,7 @@ export default function SignUpForm({ classes }) {
             <Select
               required
               autoWidth
+              className={classes.formInput}
               variant="standard"
               name="tipo"
               id="tipo"
@@ -205,6 +242,7 @@ export default function SignUpForm({ classes }) {
                   <TextField
                     required
                     fullWidth
+                    className={classes.formInput}
                     variant="standard"
                     label="Nome da ONG"
                     name="nomeOng"
@@ -217,6 +255,7 @@ export default function SignUpForm({ classes }) {
                   <TextField
                     required
                     fullWidth
+                    className={classes.formInput}
                     variant="standard"
                     label="CNPJ da ONG"
                     name="cnpj"
@@ -230,12 +269,14 @@ export default function SignUpForm({ classes }) {
           : null}
             <Button
               variant="contained"
-              color="primary"
+              className={classes.btnSignup}
+              color="secondary"
               type="submit"
             >
               Cadastrar
             </Button>
-            </form>
-    </Container>
+          </form>
+      </Container>
+    </ThemeProvider>
 	)
-}
+};
