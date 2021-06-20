@@ -1,7 +1,10 @@
 import { Container, Typography } from "@material-ui/core";
+import Navbar from '../../components/Navbar/Navbar';
 
-export function MaybeNot() {
+export default function MaybeNot() {
   return(
+    <>
+    <Navbar />
     <Container>
       <Typography>Talvez este não seja o melhor momento pra você adotar um pet...</Typography>
       <Typography>Aqui no Adotinder, nossa prioridade é encontrar adoções certeiras, que proporcionem um lar "pra sempre" para nossos animaizinhos. Um de nossos principais pilares é evitar a devolução dos bichinhos, que é um processo extremamente estressante pra eles e pode ocorrer em algumas situações: quando a adoção foi uma decisão de impulso; quando ele não consultou as outras pessoas que moram consigo sobre a adoção; ou quando existe uma expectativa irrealista sobre o animal, levando o adotante a devolvê-lo na primeira dificuldade.</Typography>
@@ -9,5 +12,6 @@ export function MaybeNot() {
       <Typography>Além disso, é cobrada uma taxa de adoção que ajuda a custear medicações, exames, cirurgias, vacinas, vermífugos e castrações necessários no ato de resgate e reabilitação dos animais. O valor varia de acordo com a instituição. Essa medida também desestimula a adoção por impulso.</Typography>
       <Typography>Mas se você realmente quiser mudar a vida de um animalzinho e pretende fazer as adaptações necessárias pra isso acontecer, te esperamos no futuro! :)</Typography>
     </Container>
+    </>
   )
-}
+};

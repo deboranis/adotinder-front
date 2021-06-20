@@ -27,7 +27,7 @@ export default function FormEditUser({ classes }) {
   }, []);
 
   const deleteUser = () => {
-    axios.get(process.env.REACT_APP_USER_DELETE, { withCredentials: true }).then(() => {
+    axios.delete(process.env.REACT_APP_USER_DELETE, { withCredentials: true }).then(() => {
       remove();
       dispatch({
         type: 'PROVIDE_USER',
@@ -36,7 +36,7 @@ export default function FormEditUser({ classes }) {
     });
   };
 
-	const signupSchema = yup.object({
+	const editSchema = yup.object({
     email: yup
       .string()
       .trim()
@@ -64,11 +64,17 @@ export default function FormEditUser({ classes }) {
       .oneOf(['adotante', 'protetor'])
       .required(),
     nomeOng: yup
-      .string(),
+      .string()
+      .when('tipo', { is: 'protetor', then: yup.string().required('Insira o nome de registro da organização') }),
     cnpj: yup
       .string()
-      .matches(/[0-9]/, 'Apenas números')
-      .min(14, 'Digite todos os números do CNPJ')
+      .when('tipo', {
+        is: 'protetor',
+        then: yup.string()
+          .matches(/[0-9]/, 'Apenas números')
+          .min(14, 'Digite todos os números do CNPJ')
+          .required('Insira o CNPJ da organização')
+      })
   });
 	
   const formik = useFormik({
@@ -81,13 +87,17 @@ export default function FormEditUser({ classes }) {
       nomeOng: user.nomeOng,
       cnpj: user.cnpj,
     },
-    validationSchema: signupSchema,
-    enableReinitialize: true ,
+    // validationSchema: editSchema,
+    enableReinitialize: true,
     onSubmit: async (values, helpers) => {
       try {
+        if (values.tipo === 'adotante') {
+          delete values.nomeOng;
+          delete values.cnpj
+        }
         delete values.cpf;
         delete values.tipo;
-        const user = await axios.post(process.env.REACT_APP_SIGNUP, values, {
+        const user = await axios.post(process.env.REACT_APP_USER_EDIT, values, {
           withCredentials: true
         });
         dispatch({ 
@@ -159,9 +169,7 @@ export default function FormEditUser({ classes }) {
               value={formik.values.telefone}
               onChange={formik.handleChange}
             />
-            {user.tipo === 'protetor' ? 
-                <>
-                  <TextField
+                  {user.tipo === 'protetor' ? <TextField
                     required
                     fullWidth
                     variant="standard"
@@ -172,8 +180,8 @@ export default function FormEditUser({ classes }) {
                     helperText={formik.touched.nomeOng && formik.errors.nomeOng}
                     value={formik.values.nomeOng}
                     onChange={formik.handleChange}
-                    />
-                  <TextField
+                    /> : null }
+                  {user.tipo === 'protetor' ? <TextField
                     required
                     fullWidth
                     variant="standard"
@@ -184,9 +192,7 @@ export default function FormEditUser({ classes }) {
                     helperText={formik.touched.cnpj && formik.errors.cnpj}
                     value={formik.values.cnpj}
                     onChange={formik.handleChange}
-                  />
-                </>
-          : null}
+                  /> : null}
             <Button
               variant="contained"
               color="primary"
@@ -200,10 +206,11 @@ export default function FormEditUser({ classes }) {
               color="secondary"
               type="button"
               onClick={() => {
-                let result = confirm('Você realmente quer apagar sua conta? Essa ação é irreversível e removerá todos os seus dados do aplicativo, como animais adotados/cadastrados.')
+                let result = confirm('Você realmente quer apagar sua conta? Esta ação é irreversível e removerá todos os seus dados do aplicativo, como animais adotados/cadastrados.')
                 if(result) {
                   deleteUser();
                   remove();
+                  history.push('/');
                 }
               }}
             >
