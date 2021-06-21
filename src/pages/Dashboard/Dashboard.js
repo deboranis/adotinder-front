@@ -1,53 +1,113 @@
-import { Button, Container, Typography } from '@material-ui/core';
-import { useEffect, useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from '../../context/Context';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
-import { get, set, remove } from '../../utils/localStorage';
-import axios from 'axios';
+import { Button, Container, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { themeColors, baseFont, coolFont } from "../../assets/theme";
+import PetsOutlinedIcon from '@material-ui/icons/PetsOutlined';
+import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
+import QuestionAnswerOutlinedIcon from '@material-ui/icons/QuestionAnswerOutlined';
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
+import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined';
+import useToken from '../../hooks/withUser';
 
-export default function Dashboard({ location }) {
-  const history = useHistory();
-  const [user, setUser] = useState(location.state);
-  console.log(user);
-  const { state, dispatch } = useContext(Context);
+export default function Dashboard() {
+  const { state } = useContext(Context);
 
-  useEffect(() => {
-    if (!location.state || !state.user.email) {
-      axios.get(process.env.REACT_APP_GET_TOKEN, { withCredentials: true }) // dizendo pro axios mandar cookies
-			.then((data) => {
-        if (data.data.email) {
-          dispatch({
-            type: "PROVIDE_USER",
-            payload: data.data,
-          });
-          set('authed', { success: true });
-          setUser(prev => {return {...prev, ...data.data}});
-        }
-			})
-      .catch(() => { remove(); history.push('/login'); });
-    }
-  }, []);
+  useToken();
   // estamos partindo do princípio que pode acontecer de não ter nada no local storage, então consultamos o state tbm
+
+  const useStyles = makeStyles(() => ({
+    dashboardContainer: {
+      display: "flex",
+      flexDirection: "column",
+      marginTop: 20,
+    },
+    btnDashboard: {
+      backgroundColor: themeColors.palette.status.error,
+      color: themeColors.palette.status.warning,
+      fontFamily: baseFont.typography.fontFamily,
+      marginTop: 10,
+      marginBottom: 10,
+      padding: 10,
+      width: "100%",
+      justifyContent: "space-between"
+    },
+    iconColor: {
+      color: themeColors.palette.status.warning,
+    },
+    dashboardText: {
+      fontFamily: coolFont.typography.fontFamily,
+      color: themeColors.palette.status.error,
+    },
+    dashboardSubtext: {
+      fontFamily: baseFont.typography.fontFamily,
+      color: themeColors.palette.status.error,
+    },
+    buttonContainer: {
+      padding: 0,
+      marginTop: 20,
+    }
+  }));
+
+  const classes = useStyles();
 
   return(
     <>
     <Navbar />
-    <Typography>DASHBOARD</Typography>
-    {Boolean(user || location.state) &&
-    Boolean(user.tipo === 'adotante'
-      || Boolean(location.state
-      && location.state.tipo === 'adotante')) ?
-      <Container>
-        <Button href="/editUser">Editar meu cadastro</Button>
-        <Button href="/quiz">Fazer quiz</Button>
-        <Button>Minhas intenções de adoção</Button>
+    <Container className={classes.dashboardContainer}>
+      <Typography 
+        variant="h4"
+        className={classes.dashboardText}
+        >
+          Dashboard
+      </Typography>
+      <Typography 
+        variant="h6"
+        className={classes.dashboardSubtext}
+        >
+          Olá, {state.user.nome}!
+      </Typography>
+
+      {state.user.tipo === 'adotante' ?
+      <Container className={classes.buttonContainer}>
+
+        <Button component={Link} className={classes.btnDashboard} to="/user/edit">
+            <SettingsOutlinedIcon className={classes.iconColor} />
+          Editar meu cadastro
+        </Button>
+
+        <Button component={Link} className={classes.btnDashboard} to="/quiz">
+            <QuestionAnswerOutlinedIcon className={classes.iconColor} />
+          Fazer quiz
+        </Button>
+
+        <Button component={Link} className={classes.btnDashboard} to="/user/pets/picked">
+            <StarBorderOutlinedIcon className={classes.iconColor} />
+          Minhas intenções de adoção
+        </Button>
       </Container>
-      :<Container>
-        <Button href="/editUser">Editar meu cadastro</Button>
-        <Button href="/add">Adicionar animais</Button>
-        <Button href="/pets">Ver animais cadastrados</Button>
-      </Container>}
+      :
+      <Container className={classes.buttonContainer}>
+
+        <Button component={Link} className={classes.btnDashboard} to="/user/edit">
+            <SettingsOutlinedIcon className={classes.iconColor} />
+          Editar meu cadastro
+        </Button>
+
+        <Button component={Link} className={classes.btnDashboard} to="/pets/add">
+            <AddCircleOutlineOutlinedIcon className={classes.iconColor} />
+          Adicionar animais
+        </Button>
+
+        <Button component={Link} className={classes.btnDashboard} to="/user/pets">
+            <PetsOutlinedIcon className={classes.iconColor} />
+          Ver animais cadastrados
+        </Button>
+        
+        </Container>}
+      </Container>
 		</>
   );
 }

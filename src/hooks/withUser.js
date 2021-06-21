@@ -4,12 +4,12 @@ import { useEffect, useContext } from 'react';
 import { Context } from '../context/Context';
 import { set, remove } from '../utils/localStorage';
 
-export default function useToken(locationState) {
+export default function useToken() {
   const { state, dispatch } = useContext(Context);
   const history = useHistory();
 
   useEffect(() => {
-    if (Object.keys(state.user).length < 1 && arguments.length === 0 || !locationState) {
+    if (Object.keys(state.user).length < 1) {
       axios.get(process.env.REACT_APP_GET_TOKEN, { withCredentials: true }) // dizendo pro axios mandar cookies
 			.then((data) => {
         if (data.data.email) {
@@ -20,7 +20,7 @@ export default function useToken(locationState) {
           set('authed', { success: true });
         }
 			})
-      .catch((error) => remove());
+      .catch((error) => {remove();});
     }
   }, []);
 }

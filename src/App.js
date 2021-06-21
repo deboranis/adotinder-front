@@ -21,9 +21,9 @@ function App() {
         <Route exact path="/signup" component={Signup} />
         {state.user.email || get('authed') ? <Route exact path="/dashboard" component={Dashboard} /> : <Redirect to="/login" />}
         <Route exact path="/quiz" component={Quiz} />
-        <Route exact path="/editUser" component={EditUser} />
-        <Route exact path="/addPet" component={AddPet} />
-        <Route exact path="/maybeNot" component={MaybeNot} />
+        <Route exact path="/user/edit" component={EditUser} />
+        <Route exact path="/pets/add" component={AddPet} />
+        <Route exact path="/maybenot" component={MaybeNot} />
     </Switch>
   );
 }

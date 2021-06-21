@@ -27,6 +27,7 @@ const useStyles = makeStyles(() => ({
   menuBtn: {
     fontWeight: 700,
     fontSize: '1em',
+    fontFamily: baseFont.typography.fontFamily,
     color: theme.palette.status.success,
   }
 }));

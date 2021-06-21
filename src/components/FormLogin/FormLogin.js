@@ -57,7 +57,7 @@ export default function FormLogin() {
     }
   });
 
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles((theme) => ({
     btnLogin: {
       fontWeight: 700,
       marginTop: 20,
