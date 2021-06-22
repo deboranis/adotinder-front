@@ -7,8 +7,10 @@ import { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../context/Context';
 import { remove } from '../../utils/localStorage';
+import { makeStyles } from '@material-ui/core/styles';
+import { themeColors, baseFont, coolFont } from "../../assets/theme";
 
-export default function FormEditUser({ classes }) {
+export default function FormEditUser() {
 	const { state, dispatch } = useContext(Context);
 	const [user, setUser] = useState({
     email: '',
@@ -116,13 +118,51 @@ export default function FormEditUser({ classes }) {
     }
   });
 
+  const useStyles = makeStyles(() => ({
+    formContainer: {
+      marginTop: 20,
+      marginLeft: 20,
+      marginRight: 20,
+      padding: 0,
+    },
+    formField: {
+      marginTop: 10,
+      fontFamily: baseFont.typography.fontFamily,
+      color: "grey",
+    },
+    formBtn: {
+      fontFamily: baseFont.typography.fontFamily,
+      marginTop: 10,
+      width: "60%",
+      backgroundColor: themeColors.palette.status.error,
+      color: themeColors.palette.status.warning,
+    },
+    formBtnErase: {
+      fontFamily: baseFont.typography.fontFamily,
+      marginTop: 10,
+      width: "60%",
+      backgroundColor: themeColors.palette.status.warning,
+      color: themeColors.palette.status.error,
+      fontWeight: 600,
+      border: `2px solid ${themeColors.palette.status.warning}`,
+    },
+    formTitle: {
+      fontFamily: coolFont.typography.fontFamily,
+      color: themeColors.palette.status.error,
+    },
+  }));
+
+  const classes = useStyles();
+
 	return (
-		<Container maxWidth="xs">
-      <Typography variant="h5">Atualizar Cadastro</Typography>
+		<Container className={classes.formContainer}>
+      <Typography className={classes.formTitle} variant="h5">Atualizar Cadastro</Typography>
             <form onSubmit={formik.handleSubmit}>
             <TextField
               required
               fullWidth
+              InputLabelProps={{ shrink: true }}
+              className={classes.formField}
               variant="standard"
               label="Nome completo"
               name="nome"
@@ -135,6 +175,7 @@ export default function FormEditUser({ classes }) {
             <TextField
               required
               fullWidth
+              className={classes.formField}
               variant="standard"
               label="E-Mail"
               name="email"
@@ -148,6 +189,7 @@ export default function FormEditUser({ classes }) {
               required
               fullWidth
               disabled
+              className={classes.formField}
               variant="standard"
               label="CPF"
               name="cpf"
@@ -160,6 +202,7 @@ export default function FormEditUser({ classes }) {
             <TextField
               required
               fullWidth
+              className={classes.formField}
               variant="standard"
               label="Telefone com DDD"
               name="telefone"
@@ -169,53 +212,57 @@ export default function FormEditUser({ classes }) {
               value={formik.values.telefone}
               onChange={formik.handleChange}
             />
-                  {user.tipo === 'protetor' ? <TextField
-                    required
-                    fullWidth
-                    variant="standard"
-                    label="Nome da ONG"
-                    name="nomeOng"
-                    id="nomeOng"
-                    error={formik.touched.nomeOng && Boolean(formik.errors.nomeOng)}
-                    helperText={formik.touched.nomeOng && formik.errors.nomeOng}
-                    value={formik.values.nomeOng}
-                    onChange={formik.handleChange}
-                    /> : null }
-                  {user.tipo === 'protetor' ? <TextField
-                    required
-                    fullWidth
-                    variant="standard"
-                    label="CNPJ da ONG"
-                    name="cnpj"
-                    id="cnpj"
-                    error={formik.touched.cnpj && Boolean(formik.errors.cnpj)}
-                    helperText={formik.touched.cnpj && formik.errors.cnpj}
-                    value={formik.values.cnpj}
-                    onChange={formik.handleChange}
-                  /> : null}
+              {user.tipo === 'protetor' ? <TextField
+                required
+                fullWidth
+                className={classes.formField}
+                variant="standard"
+                label="Nome da ONG"
+                name="nomeOng"
+                id="nomeOng"
+                error={formik.touched.nomeOng && Boolean(formik.errors.nomeOng)}
+                helperText={formik.touched.nomeOng && formik.errors.nomeOng}
+                value={formik.values.nomeOng}
+                onChange={formik.handleChange}
+                /> : null }
+              {user.tipo === 'protetor' ? <TextField
+                required
+                fullWidth
+                className={classes.formField}
+                variant="standard"
+                label="CNPJ da ONG"
+                name="cnpj"
+                id="cnpj"
+                error={formik.touched.cnpj && Boolean(formik.errors.cnpj)}
+                helperText={formik.touched.cnpj && formik.errors.cnpj}
+                value={formik.values.cnpj}
+                onChange={formik.handleChange}
+              /> : null}
+
             <Button
+              className={classes.formBtn}
               variant="contained"
-              color="primary"
               type="submit"
             >
               Alterar dados
             </Button>
-            </form>
-            <Button
-              variant="contained"
-              color="secondary"
-              type="button"
-              onClick={() => {
-                let result = confirm('Você realmente quer apagar sua conta? Esta ação é irreversível e removerá todos os seus dados do aplicativo, como animais adotados/cadastrados.')
-                if(result) {
-                  deleteUser();
-                  remove();
-                  history.push('/');
-                }
-              }}
-            >
-              Apagar conta
-            </Button>
+
+          </form>
+        <Button
+          className={classes.formBtnErase}
+          variant="contained"
+          type="button"
+          onClick={() => {
+            let result = confirm('Você realmente quer apagar sua conta? Esta ação é irreversível e removerá todos os seus dados do aplicativo, como animais adotados/cadastrados.')
+            if(result) {
+              deleteUser();
+              remove();
+              history.push('/');
+            }
+          }}
+        >
+        Apagar conta
+        </Button>
     </Container>
 	)
 }
