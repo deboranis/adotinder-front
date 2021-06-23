@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Container, Typography } from '@material-ui/core';
 import Navbar from '../../components/Navbar/Navbar';

@@ -6,10 +6,10 @@ import { useEffect, useState, useContext } from 'react';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../context/Context';
-import { themeColors, baseFont } from '../../assets/theme';
+import { baseFont } from '../../assets/theme';
 
 export default function SignUpForm() {
-	const { state, dispatch } = useContext(Context);
+	const { dispatch } = useContext(Context);
 	const [user, setUser] = useState();
 	const [tipo, setTipo] = useState();
   const history = useHistory();
@@ -74,7 +74,7 @@ export default function SignUpForm() {
         payload: user
       });
     }
-  }, [user]);
+  }, [user, dispatch]);
 	
   const formik = useFormik({
     initialValues: {

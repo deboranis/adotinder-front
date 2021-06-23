@@ -1,19 +1,17 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Container, TextField, Button, Typography, RadioGroup, Radio, FormLabel, FormControlLabel } from '@material-ui/core';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
-import { Context } from '../../context/Context';
-import { themeColors, baseFont } from '../../assets/theme';
+// import { useHistory } from 'react-router-dom';
+import { baseFont } from '../../assets/theme';
 import { DropzoneArea } from 'material-ui-dropzone';
 import petMapper from '../../utils/petMapper';
 import axios from 'axios';
 
 export default function FormAddPet() {
-	const { state, dispatch } = useContext(Context);
-  const history = useHistory();
-  const [ value, setValue ] = useState();
+  // const history = useHistory();
+  const [ image, setImage ] = useState('');
 
   const addPetSchema = yup.object({
     nome: yup
@@ -68,6 +66,8 @@ export default function FormAddPet() {
       .oneOf(['sim', 'nao'])
   });
 	
+  const reader = new FileReader();
+
   const formik = useFormik({
     initialValues: {
       nome: '',
@@ -83,15 +83,19 @@ export default function FormAddPet() {
       socializaCriancas: '',
       fiv: '',
       felv: '',
+      // foto: []
     },
     validationSchema: addPetSchema,
     onSubmit: async (values, helpers) => {
       try {
-        console.log('SUBMETENDO!')
+        // console.log(image)
+        values.foto = reader.readAsDataURL(image);
+        // console.log(values)
+        //console.log('SUBMETENDO!')
         await axios.post(process.env.REACT_APP_PET_CREATE, petMapper(values), { withCredentials: true });
         //history.push('/dashboard');
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         if (error.response.data?.type === 'User-Repo-Create-email') {
           helpers.setFieldError('email', 'Já existe um usuário com esse email');
         }
@@ -125,8 +129,9 @@ export default function FormAddPet() {
     },
   }))
 
-  const classes = useStyles();
 
+
+  const classes = useStyles();
 	return (
     <ThemeProvider theme={baseFont}>
 		  <Container maxWidth="xs">
@@ -229,7 +234,19 @@ export default function FormAddPet() {
               <FormControlLabel value="nao" control={<Radio />} label="Não" />
             </RadioGroup>
 
-            {/* <DropzoneArea dropzoneText="Os adotantes precisam ver como é o bichinho! Coloque uma foto dele aqui :)" /> */}
+            <DropzoneArea
+              maxFileSize={5242880}
+              filesLimit={1}
+              // initialFiles={formik.values.foto}
+              acceptedFiles={['image/*']}
+              // onChange={(file) => setImage(reader.readAsDataURL(new Blob([file], {type: 'image/jpeg'})))}
+              onChange={(file) => {
+                const blob = new Blob([file], {type: 'image/jpeg'});
+                let url = URL.createObjectURL(blob);
+                console.log(blob)
+                setImage(url)
+              }}
+              dropzoneText="Os adotantes precisam ver como é o bichinho! Coloque uma foto dele aqui :)" />
 
             {formik.values.especie === "gato" ? 
                 <>
@@ -256,6 +273,11 @@ export default function FormAddPet() {
               Adicionar pet
             </Button>
           </form>
+          <div style={{width: "100px", height: "100px"}}>
+          {image ? <img src={image} alt="imagem" /> : null}
+
+          </div>
+          {/* {console.log(image)} */}
       </Container>
     </ThemeProvider>
 	)

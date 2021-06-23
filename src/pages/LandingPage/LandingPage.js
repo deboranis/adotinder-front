@@ -1,5 +1,5 @@
 import { Button, Container, Typography, Slide } from "@material-ui/core";
-import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { themeColors, coolFont, baseFont } from "../../assets/theme";
 import { useContext } from 'react';
 import { Context } from '../../context/Context';

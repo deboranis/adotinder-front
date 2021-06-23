@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { themeColors, baseFont, coolFont } from "../../assets/theme";
 
 export default function FormEditUser() {
-	const { state, dispatch } = useContext(Context);
+	const { dispatch } = useContext(Context);
 	const [user, setUser] = useState({
     email: '',
     cpf: '',
@@ -89,7 +89,7 @@ export default function FormEditUser() {
       nomeOng: user.nomeOng,
       cnpj: user.cnpj,
     },
-    // validationSchema: editSchema,
+    validationSchema: editSchema,
     enableReinitialize: true,
     onSubmit: async (values, helpers) => {
       try {
