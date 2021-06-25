@@ -64,7 +64,6 @@ export default function ButtonAppBar() {
               : get('authed') && history.location.pathname === '/dashboard'
               ? null
               : <Button component={ReactLink} to="/dashboard" className={classes.menuBtn}>Dashboard</Button> }
-              <Button className={classes.menuBtn}>Sobre</Button>
               {state.user.email || get('authed') 
               ? 
               <Button onClick={logout} className={classes.menuBtn}>Logout</Button> 
