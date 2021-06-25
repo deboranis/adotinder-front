@@ -9,6 +9,16 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import petMapper from '../../utils/petMapper';
 import axios from 'axios';
 
+const blobToBase64 = (blob) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      resolve(reader.result);
+    };
+  });
+};
+
 export default function FormAddPet() {
   // const history = useHistory();
   const [ image, setImage ] = useState('');
@@ -63,10 +73,9 @@ export default function FormAddPet() {
       .oneOf(['sim', 'nao']),
     felv: yup
       .string()
-      .oneOf(['sim', 'nao'])
+      .oneOf(['sim', 'nao']),
+    foto: yup.mixed()
   });
-	
-  const reader = new FileReader();
 
   const formik = useFormik({
     initialValues: {
@@ -83,19 +92,21 @@ export default function FormAddPet() {
       socializaCriancas: '',
       fiv: '',
       felv: '',
-      // foto: []
+      foto: null
     },
     validationSchema: addPetSchema,
     onSubmit: async (values, helpers) => {
       try {
-        // console.log(image)
-        values.foto = reader.readAsDataURL(image);
-        // console.log(values)
-        //console.log('SUBMETENDO!')
+        if (!image) {
+          helpers.setFieldError('foto', 'Por favor envia uma imagem do pet')
+        }
+        const converted = await blobToBase64(image);
+        values.foto = converted;
+        console.log(values);
         await axios.post(process.env.REACT_APP_PET_CREATE, petMapper(values), { withCredentials: true });
-        //history.push('/dashboard');
+        // history.push('/dashboard');
       } catch (error) {
-        // console.log(error)
+        console.log(error)
         if (error.response.data?.type === 'User-Repo-Create-email') {
           helpers.setFieldError('email', 'Já existe um usuário com esse email');
         }
@@ -136,7 +147,7 @@ export default function FormAddPet() {
     <ThemeProvider theme={baseFont}>
 		  <Container maxWidth="xs">
         <Typography variant="h5" className={classes.formText}>Adicionar pet</Typography>
-          <form className={classes.container} onSubmit={formik.handleSubmit}>
+          <form className={classes.container} onSubmit={formik.handleSubmit} encType="multipart/form-data">
 
             <TextField
               required
@@ -237,15 +248,13 @@ export default function FormAddPet() {
             <DropzoneArea
               maxFileSize={5242880}
               filesLimit={1}
-              // initialFiles={formik.values.foto}
+              inputProps={{ name: "foto" }}
               acceptedFiles={['image/*']}
-              // onChange={(file) => setImage(reader.readAsDataURL(new Blob([file], {type: 'image/jpeg'})))}
               onChange={(file) => {
-                const blob = new Blob([file], {type: 'image/jpeg'});
-                let url = URL.createObjectURL(blob);
-                console.log(blob)
-                setImage(url)
+                const blob = new Blob([...file], {type: 'image/jpeg'});
+                setImage(blob);
               }}
+              onDelete={() => setImage(null)}
               dropzoneText="Os adotantes precisam ver como é o bichinho! Coloque uma foto dele aqui :)" />
 
             {formik.values.especie === "gato" ? 
@@ -273,11 +282,7 @@ export default function FormAddPet() {
               Adicionar pet
             </Button>
           </form>
-          <div style={{width: "100px", height: "100px"}}>
-          {image ? <img src={image} alt="imagem" /> : null}
-
-          </div>
-          {/* {console.log(image)} */}
+          {image ? <img src={URL.createObjectURL(image)} alt="imagem" /> : null}
       </Container>
     </ThemeProvider>
 	)
