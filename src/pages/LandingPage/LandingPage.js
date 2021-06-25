@@ -11,14 +11,14 @@ import useToken from "../../hooks/withUser";
 
 const useStyles = makeStyles(() => ({
 	container1: {
-		backgroundColor: themeColors.palette.secondary.main,
-		color: themeColors.palette.status.warning,
+		color: themeColors.palette.secondary.main,
+		backgroundColor: themeColors.palette.status.warning,
 		padding: 20,
 		textAlign: 'center',
 	},
 	container2: {
-		backgroundColor: themeColors.palette.primary.main,
-		color: themeColors.palette.status.warning,
+		color: themeColors.palette.primary.main,
+		backgroundColor: themeColors.palette.status.warning,
 		padding: 20,
 		textAlign: 'center',
 		fontSize: '1.75em'
