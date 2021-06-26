@@ -80,8 +80,8 @@ export default function LandingPage() {
 			{!state.user.email && !get('authed') ? 
 			<Container className={classes.btn_container}>
 				<ThemeProvider theme={baseFont}>
-					<Button component={ReactLink} href="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
-					<Button component={ReactLink} href="/login" variant="contained" className={classes.btn}>Login</Button>
+					<Button component={ReactLink} to="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
+					<Button component={ReactLink} to="/login" variant="contained" className={classes.btn}>Login</Button>
 				</ThemeProvider>
 			</Container> 
 			: null}
