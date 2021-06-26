@@ -83,7 +83,7 @@ export default function Dashboard() {
           Fazer quiz
         </Button>
 
-        <Button component={Link} className={classes.btnDashboard} to="/user/pets/picked">
+        <Button component={Link} className={classes.btnDashboard} to="/adocoes">
             <StarBorderOutlinedIcon className={classes.iconColor} />
           Minhas intenções de adoção
         </Button>

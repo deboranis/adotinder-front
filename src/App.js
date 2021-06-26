@@ -12,6 +12,7 @@ import AddPet from './pages/AddPet/AddPet';
 import MaybeNot from './pages/MaybeNot/MaybeNot';
 import UserPets from './pages/UserPets/UserPets';
 import Results from './pages/Results/Results';
+import Adoptions from './pages/Adoptions/Adoptions';
 
 function App() {
   const { state } = useContext(Context)
@@ -28,6 +29,7 @@ function App() {
         <Route eact path="/user/pets" component={UserPets} />
         <Route exact path="/maybenot" component={MaybeNot} />
         <Route exact path="/results" component={Results} />
+        <Route exact path="/adocoes" component={Adoptions} />
     </Switch>
   );
 }

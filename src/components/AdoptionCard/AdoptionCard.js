@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import axios from 'axios';
 import {
   Card,
   CardHeader,
@@ -11,13 +10,8 @@ import {
   Collapse,
   Container,
   IconButton,
-  Button,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
-  DialogContent,
+  Paper,
 } from '@material-ui/core';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
@@ -25,9 +19,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import { themeColors, baseFont, coolFont } from '../../assets/theme';
-import { useContext } from 'react';
-import { Context } from '../../context/Context';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,72 +69,33 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function PetCard({ pet }) {
+export default function AdoptionCard({ adocao }) {
   const [expanded, setExpanded] = useState(false);
-  const [open, setOpen] = useState(false);
-  const history = useHistory();
-  const { state } = useContext(Context);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    history.push('/dashboard');
-  };
-
-  const handleAdoption = () => {
-    const adoption = {
-      protetor: pet.protetor._id,
-      adotante: state.user.id,
-      status: 'pendente',
-      pet: pet._id
-    };
-    axios.post(process.env.REACT_APP_ADOPTION_CREATE, adoption, { withCredentials: true })
-      .then(() => {
-        setOpen(true);
-      });
-  }
+  console.log(adocao.protetor.nome)
 
   const classes = useStyles();
   return (
-    <>
-    <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Sua adoção foi registrada com sucesso!</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Agora é só esperar o protetor aprovar a sua adoção que você receberá
-            uma notificação e brevemente o protetor entrará em contato!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Fehcar
-          </Button>
-        </DialogActions>
-      </Dialog>
     <Card className={classes.root}>
       <CardHeader
         disableTypography
         className={classes.cardTitle}
-        title={pet.nome}
+        title={adocao.pet.nome}
       />
       <CardMedia
         className={classes.media}
         // Precisa fazer uma função para retirar as chaves da string da foto, aí é só jogar o resultado no src
-        src={pet.foto}
-        title={pet.nome}
+        src={adocao.pet.foto}
+        title={adocao.pet.nome}
         component="img"
       />
       <CardContent>
 
         <Typography variant="body2" className={classes.petInfo} component="p">
-          {pet.idade} meses - {pet.sexo === true ? 'Fêmea' : 'Macho'} - {pet.peso}kg
+          {adocao.pet.idade} meses - {adocao.pet.sexo === true ? 'Fêmea' : 'Macho'} - {adocao.pet.peso}kg
         </Typography>
 
       </CardContent>
@@ -178,47 +130,54 @@ export default function PetCard({ pet }) {
 
 
           <Container className={classes.containerPetInfo}>
-            {pet.vacina ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
+            {adocao.pet.vacina ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
             <Typography paragraph className={classes.petInfo}>Vacinação em dia</Typography>
           </Container>
 
           <Container className={classes.containerPetInfo}>
-            {pet.vermifugo ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
+            {adocao.pet.vermifugo ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
             <Typography paragraph className={classes.petInfo}>Vermifugado</Typography>
           </Container>
 
           <Container className={classes.containerPetInfo}>
-            {pet.socializaAnimais? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
+            {adocao.pet.socializaAnimais? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
             <Typography paragraph className={classes.petInfo}>Socializa bem com outros animais?</Typography>
           </Container>
 
           <Container className={classes.containerPetInfo}>
-            {pet.socializaCriancas ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
+            {adocao.pet.socializaCriancas ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
             <Typography paragraph className={classes.petInfo}>Socializa bem com crianças</Typography>
           </Container>
 
           <Typography paragraph className={classes.petInfo}>
-            Mais sobre {pet.nome}: {pet.descricao}
+            Mais sobre {adocao.pet.nome}: {adocao.pet.descricao}
           </Typography>
 
-          {pet.especie ? null : 
+          {adocao.pet.especie ? null : 
           <>
           <Container className={classes.containerPetInfo}>
-            {pet.fiv ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
+            {adocao.pet.fiv ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
             <Typography paragraph className={classes.petInfo}>FIV</Typography>
           </Container>
           <Container className={classes.containerPetInfo}>
-            {pet.felv ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
+            {adocao.pet.felv ? <CheckOutlinedIcon color="secondary" /> : <CloseOutlinedIcon />}
             <Typography paragraph className={classes.petInfo}>FeLV</Typography>
           </Container>
-          </>
-          }
-
-          { state.user.tipo !== 'protetor' ?  <Button className={classes.btnAdopt} onClick={handleAdoption}>Quero adotar!</Button> : null }
+          </>}
+          <Paper elevation={0}>
+            <Typography paragraph className={classes.petInfo}>Protetor: {adocao.protetor.nome}</Typography>
+            {adocao.status === 'aprovada' ? <>
+              <Typography paragraph className={classes.petInfo}>
+                Telefone: { adocao.protetor.telefone }
+              </Typography>
+              <Typography paragraph className={classes.petInfo}>
+                E-Mail: { adocao.protetor.email }
+              </Typography>
+            </> : null}
+          </Paper>
 
         </CardContent>
       </Collapse>
     </Card>
-    </>
   )
 }
