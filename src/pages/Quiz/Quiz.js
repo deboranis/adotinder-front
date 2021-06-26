@@ -259,8 +259,10 @@ function Quiz (props) {
             <Button
               className={classes.btnQuiz}
               onClick={() => {
-              console.log(resposta.join('&'));
-              // history.push('/results')
+              history.push({
+                pathname: '/results',
+                state: resposta.join('&')
+              })
             }}
             >
               Sim
