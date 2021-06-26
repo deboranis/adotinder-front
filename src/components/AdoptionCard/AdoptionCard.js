@@ -75,8 +75,6 @@ export default function AdoptionCard({ adocao }) {
     setExpanded(!expanded);
   };
 
-  console.log(adocao.protetor.nome)
-
   const classes = useStyles();
   return (
     <Card className={classes.root}>

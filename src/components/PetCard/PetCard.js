@@ -123,7 +123,7 @@ export default function PetCard({ pet }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" autoFocus>
-            Fehcar
+            Fechar
           </Button>
         </DialogActions>
       </Dialog>

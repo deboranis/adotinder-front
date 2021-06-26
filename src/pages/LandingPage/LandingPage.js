@@ -35,7 +35,8 @@ const useStyles = makeStyles(() => ({
 		fontSize: '1em',
 		border: `3px solid ${themeColors.palette.status.info}`,
 		margin: 10,
-		boxShadow: 'none'
+		boxShadow: 'none',
+		fontFamily: baseFont.typography.fontFamily
 	},
 	'&:hover': {
 		backgroundColor: themeColors.palette.status.warning,

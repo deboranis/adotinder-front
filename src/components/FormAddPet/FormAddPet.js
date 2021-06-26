@@ -126,6 +126,8 @@ export default function FormAddPet() {
     },
     formInput: {
       marginTop: 10,
+      fontFamily: baseFont.typography.fontFamily,
+      color: "grey",
     },
     btnAddPet: {
       marginTop: 20,
@@ -163,14 +165,14 @@ export default function FormAddPet() {
               onChange={formik.handleChange}
             />
 
-            <FormLabel component="legend">Espécie</FormLabel>
-            <RadioGroup aria-label="espécie do animal" name="especie" value={formik.values.especie} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">Espécie</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="espécie do animal" name="especie" value={formik.values.especie} onChange={formik.handleChange}>
               <FormControlLabel value="cachorro" control={<Radio />} label="Cachorro" />
               <FormControlLabel value="gato" control={<Radio />} label="Gato" />
             </RadioGroup>
 
-            <FormLabel component="legend">Sexo</FormLabel>
-            <RadioGroup aria-label="sexo do animal" name="sexo" value={formik.values.sexo} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">Sexo</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="sexo do animal" name="sexo" value={formik.values.sexo} onChange={formik.handleChange}>
               <FormControlLabel value="femea" control={<Radio />} label="Fêmea" />
               <FormControlLabel value="macho" control={<Radio />} label="Macho" />
             </RadioGroup>
@@ -215,32 +217,32 @@ export default function FormAddPet() {
               onChange={formik.handleChange}
             />
 
-            <FormLabel component="legend">Castrado?</FormLabel>
-            <RadioGroup aria-label="castrado" name="castrado" value={formik.values.castrado} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">Castrado?</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="castrado" name="castrado" value={formik.values.castrado} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Sim" />
               <FormControlLabel value="nao" control={<Radio />} label="Não" />
             </RadioGroup>
 
-            <FormLabel component="legend">Vacinado?</FormLabel>
-            <RadioGroup aria-label="vacinas" name="vacinas" value={formik.values.vacinas} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">Vacinado?</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="vacinas" name="vacinas" value={formik.values.vacinas} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Sim" />
               <FormControlLabel value="nao" control={<Radio />} label="Não" />
             </RadioGroup>
 
             <FormLabel component="legend">Vermifugado nos últimos 3 meses?</FormLabel>
-            <RadioGroup aria-label="vermifugo" name="vermifugo" value={formik.values.vermifugo} onChange={formik.handleChange}>
+            <RadioGroup className={classes.formInput} aria-label="vermifugo" name="vermifugo" value={formik.values.vermifugo} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Sim" />
               <FormControlLabel value="nao" control={<Radio />} label="Não" />
             </RadioGroup>
 
-            <FormLabel component="legend">Socializa bem com outros animais?</FormLabel>
-            <RadioGroup aria-label="socializaAnimais" name="socializaAnimais" value={formik.values.socializaAnimais} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">Socializa bem com outros animais?</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="socializaAnimais" name="socializaAnimais" value={formik.values.socializaAnimais} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Sim" />
               <FormControlLabel value="nao" control={<Radio />} label="Não" />
             </RadioGroup>
 
-            <FormLabel component="legend">Socializa bem com crianças?</FormLabel>
-            <RadioGroup aria-label="socializaCriancas" name="socializaCriancas" value={formik.values.socializaCriancas} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">Socializa bem com crianças?</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="socializaCriancas" name="socializaCriancas" value={formik.values.socializaCriancas} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Sim" />
               <FormControlLabel value="nao" control={<Radio />} label="Não" />
             </RadioGroup>
@@ -259,14 +261,14 @@ export default function FormAddPet() {
 
             {formik.values.especie === "gato" ? 
                 <>
-            <FormLabel component="legend">FIV</FormLabel>
-            <RadioGroup aria-label="fiv" name="fiv" value={formik.values.fiv} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">FIV</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="fiv" name="fiv" value={formik.values.fiv} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Positivo" />
               <FormControlLabel value="nao" control={<Radio />} label="Negativo" />
             </RadioGroup>
 
-            <FormLabel component="legend">FeLV</FormLabel>
-            <RadioGroup aria-label="FeLV" name="felv" value={formik.values.felv} onChange={formik.handleChange}>
+            <FormLabel className={classes.formInput} component="legend">FeLV</FormLabel>
+            <RadioGroup className={classes.formInput} aria-label="FeLV" name="felv" value={formik.values.felv} onChange={formik.handleChange}>
               <FormControlLabel value="sim" control={<Radio />} label="Positivo" />
               <FormControlLabel value="nao" control={<Radio />} label="Negativo" />
             </RadioGroup>
@@ -283,7 +285,6 @@ export default function FormAddPet() {
               Adicionar pet
             </Button>
           </form>
-          {image ? <img src={URL.createObjectURL(image)} alt="imagem" /> : null}
       </Container>
     </ThemeProvider>
 	)
