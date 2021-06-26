@@ -2,7 +2,17 @@
 import axios from 'axios';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { Container, TextField, Button, Typography } from '@material-ui/core';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@material-ui/core';
 import { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../context/Context';
@@ -20,7 +30,20 @@ export default function FormEditUser() {
     nomeOng: '',
     cnpj: '',
   });
+  const [editDialog, setEditDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const history = useHistory();
+
+  const openEditDialog = () => setEditDialog(true);
+  const closeEditDialog = () => setEditDialog(false);
+  const openDeleteDialog = () => setDeleteDialog(true);
+  const closeDeleteDialog = () => setDeleteDialog(false);
+  const handleUserDelete = () => {
+    deleteUser();
+    remove();
+    setDeleteDialog(false);
+    history.push('/');
+  }
 
   useEffect(() => {
     axios.get(process.env.REACT_APP_USER_EDIT, { withCredentials: true }).then((data) => {
@@ -242,27 +265,58 @@ export default function FormEditUser() {
             <Button
               className={classes.formBtn}
               variant="contained"
-              type="submit"
+              type="button"
+              onClick={openEditDialog}
             >
               Alterar dados
             </Button>
+            <Dialog
+              open={editDialog}
+              onClose={closeEditDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Quer realmente editar seu usuário?</DialogTitle>
+        <DialogActions>
+          <Button onClick={closeEditDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={() => { closeEditDialog(); formik.submitForm(); }} color="primary" autoFocus type="submit">
+            Concordo
+          </Button>
+        </DialogActions>
+      </Dialog>
 
           </form>
         <Button
           className={classes.formBtnErase}
           variant="contained"
           type="button"
-          onClick={() => {
-            let result = confirm('Você realmente quer apagar sua conta? Esta ação é irreversível e removerá todos os seus dados do aplicativo, como animais adotados/cadastrados.')
-            if(result) {
-              deleteUser();
-              remove();
-              history.push('/');
-            }
-          }}
+          onClick={openDeleteDialog}
         >
         Apagar conta
         </Button>
+        <Dialog
+              open={deleteDialog}
+              onClose={closeEditDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Quer realmente deletar seu usuário?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Você realmente quer apagar sua conta? Esta ação é irreversível e removerá todos os seus dados do aplicativo, como animais adotados/cadastrados.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleUserDelete} color="primary" autoFocus type="submit">
+            Concordo
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
 	)
 }
