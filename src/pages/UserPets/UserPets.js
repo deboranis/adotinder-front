@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
-// import { Typography } from "@material-ui/core";
 import PetCard from "../../components/PetCard/PetCard";
+import Navbar from '../../components/Navbar/Navbar';
 
 export default function UserPets() {
   const [pets, setPets] = useState();
@@ -14,6 +14,7 @@ export default function UserPets() {
   
   return (
     <>
+    <Navbar />
       { pets ? pets.map(pet => {
         return <PetCard pet={pet} />
       }) : null }
