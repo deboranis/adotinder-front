@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { Container, TextField, Button, Typography, RadioGroup, Radio, FormLabel, FormControlLabel } from '@material-ui/core';
 import { useState } from 'react';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { baseFont } from '../../assets/theme';
 import { DropzoneArea } from 'material-ui-dropzone';
 import petMapper from '../../utils/petMapper';
@@ -20,7 +20,7 @@ const blobToBase64 = (blob) => {
 };
 
 export default function FormAddPet() {
-  // const history = useHistory();
+  const history = useHistory();
   const [ image, setImage ] = useState('');
 
   const addPetSchema = yup.object({
@@ -278,6 +278,7 @@ export default function FormAddPet() {
               className={classes.btnAddPet}
               color="secondary"
               type="submit"
+              onClick={() => { history.push('/dashboard'); formik.submitForm(); }}
             >
               Adicionar pet
             </Button>
