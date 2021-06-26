@@ -8,6 +8,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import { themeColors, baseFont, coolFont } from '../../assets/theme';
+import { useContext } from 'react';
+import { Context } from '../../context/Context';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PetCard({ pet }) {
   const [expanded, setExpanded] = useState(false);
+  const { state } = useContext(Context);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -153,7 +156,7 @@ export default function PetCard({ pet }) {
           </>
           }
 
-          <Button className={classes.btnAdopt}>Quero adotar!</Button>
+          { state.user.tipo !== 'protetor' ?  <Button className={classes.btnAdopt}>Quero adotar!</Button> : null }
 
         </CardContent>
       </Collapse>
