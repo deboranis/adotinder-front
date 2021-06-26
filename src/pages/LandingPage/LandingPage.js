@@ -2,6 +2,7 @@ import { Button, Container, Typography, Slide } from "@material-ui/core";
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { themeColors, coolFont, baseFont } from "../../assets/theme";
 import { useContext } from 'react';
+import { Link as ReactLink } from 'react-router-dom';
 import { Context } from '../../context/Context';
 import Navbar from '../../components/Navbar/Navbar';
 import quadro1 from '../../assets/images/quadro1.jpg';
@@ -79,8 +80,8 @@ export default function LandingPage() {
 			{!state.user.email && !get('authed') ? 
 			<Container className={classes.btn_container}>
 				<ThemeProvider theme={baseFont}>
-					<Button href="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
-					<Button href="/login" variant="contained" className={classes.btn}>Login</Button>
+					<Button component={ReactLink} href="/signup" variant="contained" className={classes.btn}>Cadastre-se</Button>
+					<Button component={ReactLink} href="/login" variant="contained" className={classes.btn}>Login</Button>
 				</ThemeProvider>
 			</Container> 
 			: null}
